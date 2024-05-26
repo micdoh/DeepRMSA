@@ -8,12 +8,10 @@ import math
 import copy
 import random
 import datetime
-import tensorflow.contrib.slim as slim
 from AC_Net import AC_Net
 import threading
 import multiprocessing
 import tensorflow as tf
-import tensorflow.contrib.slim as slim
 import scipy.signal
 from random import choice
 from time import sleep
@@ -77,7 +75,7 @@ class DeepRMSA_Agent():
         self.episode_rewards = []
         self.episode_blocking = []
         self.episode_mean_values = []
-        self.summary_writer = tf.summary.FileWriter("train_" + self.name)
+        self.summary_writer = tf.compat.v1.summary.FileWriter("train_" + self.name)
         #
         self.x_dim_p = x_dim_p
         self.x_dim_v = x_dim_v
@@ -103,8 +101,8 @@ class DeepRMSA_Agent():
         # self.all_negones = [[0 for x in range(self.LINK_NUM)] for y in range(self.LINK_NUM)] # (flag-slicing)
         
     def update_target_graph(self, from_scope, to_scope):
-        from_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, from_scope)
-        to_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, to_scope)
+        from_vars = tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.TRAINABLE_VARIABLES, from_scope)
+        to_vars = tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.TRAINABLE_VARIABLES, to_scope)
 
         op_holder = []
         for from_var,to_var in zip(from_vars,to_vars):
@@ -246,12 +244,18 @@ class DeepRMSA_Agent():
         return scipy.signal.lfilter([1], [1, -self.gamma], x[::-1], axis=0)[::-1]
     
     def train(self, espisode_buff, sess, value_est):
-        espisode_buff = np.array(espisode_buff)
-        input_p = espisode_buff[:self.batch_size,0]
-        input_v = espisode_buff[:self.batch_size,1]
-        actions = espisode_buff[:self.batch_size,2]
-        rewards = espisode_buff[:,3]
-        values = espisode_buff[:,4]
+        #espisode_buff = np.array(espisode_buff)
+        # Get first element of each tuple in espisode_buff
+        input_p = np.array([x[0] for x in espisode_buff[:self.batch_size]])
+        input_v = np.array([x[1] for x in espisode_buff[:self.batch_size]])
+        actions = np.array([x[2] for x in espisode_buff[:self.batch_size]])
+        rewards = np.array([x[3] for x in espisode_buff])
+        values = np.array([x[4] for x in espisode_buff])
+        # input_p = espisode_buff[:self.batch_size,0]
+        # input_v = espisode_buff[:self.batch_size,1]
+        # actions = espisode_buff[:self.batch_size,2]
+        # rewards = espisode_buff[:,3]
+        # values = espisode_buff[:,4]
         
         self.rewards_plus = np.asarray(rewards.tolist() + [value_est])
         discounted_rewards = self.discount(self.rewards_plus)[:-1]

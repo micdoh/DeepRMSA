@@ -7,7 +7,6 @@ import os
 from random import choice
 from time import sleep
 from time import time
-import tensorflow.contrib.slim as slim
 import scipy.signal
 import struct
 from collections import defaultdict
@@ -20,6 +19,7 @@ from DeepRMSA_Agent import DeepRMSA_Agent
 # key features: uniform/nonuniform traffic distribution; window-based training; policy embedded with epsilon-greedy approach
 
 # -----------------------------------------------------------
+tf.compat.v1.disable_eager_execution()
 
 linkmap = defaultdict(lambda:defaultdict(lambda:None)) # Topology: NSFNet
 linkmap[1][2] = (0, 1050)
@@ -110,7 +110,7 @@ regu_scalar = 1e-4
 
 max_cpu = 16
 
-lambda_req = 12
+lambda_req = 1
 lambda_time = [14]
 SLOT_TOTAL = 100
 
@@ -159,11 +159,11 @@ fp.close()
 load_model = False#True
 model_path = 'model'
 
-tf.reset_default_graph()
+tf.compat.v1.reset_default_graph()
 
 with tf.device("/cpu:0"):
     global_episodes = tf.Variable(0, dtype = tf.int32, name = 'global_episodes', trainable = False)
-    trainer = tf.train.AdamOptimizer(learning_rate = 1e-5)
+    trainer = tf.compat.v1.train.AdamOptimizer(learning_rate = 1e-5)
     #trainer = tf.train.RMSPropOptimizer(learning_rate = 1e-5, decay = 0.99, epsilon = 0.0001)
     master_network = AC_Net(scope = 'global',
                             trainer = None,
@@ -180,15 +180,15 @@ with tf.device("/cpu:0"):
     # Create worker classes
     for i in range(num_agents):
         agents.append(DeepRMSA_Agent(i,trainer,linkmap,LINK_NUM,NODE_NUM,SLOT_TOTAL,k_path,M,lambda_req,lambda_time,len_lambda_time,gamma,episode_size,batch_size,Src_Dest_Pair,Candidate_Paths,num_src_dest_pair,model_path,global_episodes,regu_scalar,x_dim_p,x_dim_v,n_actions,num_layers,layer_size,model2_flag,nonuniform,prob_arr))
-    saver = tf.train.Saver(max_to_keep = 5)
+    saver = tf.compat.v1.train.Saver(max_to_keep = 5)
 
-with tf.Session() as sess:
-    coord = tf.train.Coordinator()
+with tf.compat.v1.Session() as sess:
+    coord = tf.compat.v1.train.Coordinator()
     if load_model == True:
-        ckpt = tf.train.get_checkpoint_state(model_path)
+        ckpt = tf.compat.v1.train.get_checkpoint_state(model_path)
         saver.restore(sess,ckpt.model_checkpoint_path)
     else:
-        sess.run(tf.global_variables_initializer())
+        sess.run(tf.compat.v1.global_variables_initializer())
         
     # Start the "rmsa" process for each agent in a separate threat.
     agent_threads = []
@@ -198,4 +198,9 @@ with tf.Session() as sess:
         t.start()
         sleep(0.5)
         agent_threads.append(t)
+    start_time = time()
     coord.join(agent_threads)
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"The code operation took {execution_time} seconds to execute.")
+

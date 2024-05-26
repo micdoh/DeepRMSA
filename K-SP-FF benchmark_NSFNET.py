@@ -18,77 +18,138 @@ import datetime
 # for load3, we set lambda_req = 8, for load 2, 5, for load 1, 3
 
 # change topology, here below
+bidirectional = False
+nonuniform = False
 linkmap = defaultdict(lambda:defaultdict(lambda:None)) # Topology: NSFNet
-linkmap[1][2] = (0, 1050)
-linkmap[2][1] = (3, 1050)
-linkmap[1][3] = (1, 1500)
-linkmap[3][1] = (6, 1500)
-linkmap[1][8] = (2, 2400)
-linkmap[8][1] = (22, 2400)
+if not bidirectional:
+    linkmap[1][2] = (0, 1050)
+    linkmap[2][1] = (3, 1050)
+    linkmap[1][3] = (1, 1500)
+    linkmap[3][1] = (6, 1500)
+    linkmap[1][8] = (2, 2400)
+    linkmap[8][1] = (22, 2400)
 
-linkmap[2][3] = (4, 600)
-linkmap[3][2] = (7, 600)
-linkmap[2][4] = (5, 750)
-linkmap[4][2] = (9, 750)
-linkmap[3][6] = (8, 1800)
-linkmap[6][3] = (15, 1800)
+    linkmap[2][3] = (4, 600)
+    linkmap[3][2] = (7, 600)
+    linkmap[2][4] = (5, 750)
+    linkmap[4][2] = (9, 750)
+    linkmap[3][6] = (8, 1800)
+    linkmap[6][3] = (15, 1800)
 
-linkmap[4][5] = (10, 600)
-linkmap[5][4] = (12, 600)
-linkmap[4][11] = (11, 1950)
-linkmap[11][4] = (32, 1950)
-linkmap[5][6] = (13, 1200)
-linkmap[6][5] = (16, 1200)
-linkmap[5][7] = (14, 600)
-linkmap[7][5] = (19, 600)
+    linkmap[4][5] = (10, 600)
+    linkmap[5][4] = (12, 600)
+    linkmap[4][11] = (11, 1950)
+    linkmap[11][4] = (32, 1950)
+    linkmap[5][6] = (13, 1200)
+    linkmap[6][5] = (16, 1200)
+    linkmap[5][7] = (14, 600)
+    linkmap[7][5] = (19, 600)
 
-linkmap[6][10] = (17, 1050)
-linkmap[10][6] = (29, 1050)
-linkmap[6][14] = (18, 1800)
-linkmap[14][6] = (41, 1800)
-linkmap[7][8] = (20, 750)
-linkmap[8][7] = (23, 750)
-linkmap[7][10] = (21, 1350)
-linkmap[10][7] = (30, 1350)
+    linkmap[6][10] = (17, 1050)
+    linkmap[10][6] = (29, 1050)
+    linkmap[6][14] = (18, 1800)
+    linkmap[14][6] = (41, 1800)
+    linkmap[7][8] = (20, 750)
+    linkmap[8][7] = (23, 750)
+    linkmap[7][10] = (21, 1350)
+    linkmap[10][7] = (30, 1350)
 
-linkmap[8][9] = (24, 750)
-linkmap[9][8] = (25, 750)
-linkmap[9][10] = (26, 750)
-linkmap[10][9] = (31, 750)
-linkmap[9][12] = (27, 300)
-linkmap[12][9] = (35, 300)
-linkmap[9][13] = (28, 300)
-linkmap[13][9] = (38, 300)
+    linkmap[8][9] = (24, 750)
+    linkmap[9][8] = (25, 750)
+    linkmap[9][10] = (26, 750)
+    linkmap[10][9] = (31, 750)
+    linkmap[9][12] = (27, 300)
+    linkmap[12][9] = (35, 300)
+    linkmap[9][13] = (28, 300)
+    linkmap[13][9] = (38, 300)
 
-linkmap[11][12] = (33, 600)
-linkmap[12][11] = (36, 600)
-linkmap[11][13] = (34, 750)
-linkmap[13][11] = (39, 750)
-linkmap[12][14] = (37, 300)
-linkmap[14][12] = (42, 300)
-linkmap[13][14] = (40, 150)
-linkmap[14][13] = (43, 150)
+    linkmap[11][12] = (33, 600)
+    linkmap[12][11] = (36, 600)
+    linkmap[11][13] = (34, 750)
+    linkmap[13][11] = (39, 750)
+    linkmap[12][14] = (37, 300)
+    linkmap[14][12] = (42, 300)
+    linkmap[13][14] = (40, 150)
+    linkmap[14][13] = (43, 150)
+else:
+    # Try with 22 bi-directional links
+    linkmap[1][2] = (0, 1050)
+    linkmap[2][1] = (0, 1050)
+    linkmap[1][3] = (1, 1500)
+    linkmap[3][1] = (1, 1500)
+    linkmap[1][8] = (2, 2400)
+    linkmap[8][1] = (2, 2400)
 
-nonuniform = False #True#
+    linkmap[2][3] = (3, 600)
+    linkmap[3][2] = (3, 600)
+    linkmap[2][4] = (4, 750)
+    linkmap[4][2] = (4, 750)
+    linkmap[3][6] = (5, 1800)
+    linkmap[6][3] = (5, 1800)
+
+    linkmap[4][5] = (6, 600)
+    linkmap[5][4] = (6, 600)
+    linkmap[4][11] = (7, 1950)
+    linkmap[11][4] = (7, 1950)
+    linkmap[5][6] = (8, 1200)
+    linkmap[6][5] = (8, 1200)
+    linkmap[5][7] = (9, 600)
+    linkmap[7][5] = (9, 600)
+
+    linkmap[6][10] = (10, 1050)
+    linkmap[10][6] = (10, 1050)
+    linkmap[6][14] = (11, 1800)
+    linkmap[14][6] = (11, 1800)
+    linkmap[7][8] = (12, 750)
+    linkmap[8][7] = (12, 750)
+    linkmap[7][10] = (13, 1350)
+    linkmap[10][7] = (13, 1350)
+
+    linkmap[8][9] = (14, 750)
+    linkmap[9][8] = (14, 750)
+    linkmap[9][10] = (15, 750)
+    linkmap[10][9] = (15, 750)
+    linkmap[9][12] = (16, 300)
+    linkmap[12][9] = (16, 300)
+    linkmap[9][13] = (17, 300)
+    linkmap[13][9] = (17, 300)
+
+    linkmap[11][12] = (18, 600)
+    linkmap[12][11] = (18, 600)
+    linkmap[11][13] = (19, 750)
+    linkmap[13][11] = (19, 750)
+    linkmap[12][14] = (20, 300)
+    linkmap[14][12] = (20, 300)
+    linkmap[13][14] = (21, 150)
+    linkmap[14][13] = (21, 150)
+
 # traffic distrition, when non-uniform traffic is considered
 trafic_dis = [[0, 2, 1, 1, 1, 4, 1, 1, 2, 1, 1, 1, 1, 1],
-                      [2, 0, 2, 1, 8, 2, 1, 5, 3, 5, 1, 5, 1, 4],
-                      [1, 2, 0, 2, 3, 2, 11, 20, 5, 2, 1, 1, 1, 2],
-                      [1, 1, 2, 0, 1, 1, 2, 1, 2, 2, 1, 2, 1, 2],
-                      [1, 8, 3, 1, 0, 3, 3, 7, 3, 3, 1, 5, 2, 5],
-                      [4, 2, 2, 1, 3, 0, 2, 1, 2, 2, 1, 1, 1, 2],
-                      [1, 1, 11, 2, 3, 2, 0, 9, 4, 20, 1, 8, 1, 4],
-                      [1, 5, 20, 1, 7, 1, 9, 0, 27, 7, 2, 3, 2, 4],
-                      [2, 3, 5, 2, 3, 2, 4, 27, 0, 75, 2, 9, 3, 1],
-                      [1, 5, 2, 2, 3, 2, 20, 7, 75, 0, 1, 1, 2, 1],
-                      [1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 0, 2, 1, 61],
-                      [1, 5, 1, 2, 5, 1, 8, 3, 9, 1, 2, 0, 1, 81],
-                      [1, 1, 1, 1, 2, 1, 1, 2, 3, 2, 1, 1, 0, 2],
-                      [1, 4, 2, 2, 5, 2, 4, 4, 0, 1, 61, 81, 2, 0]]
+              [2, 0, 2, 1, 8, 2, 1, 5, 3, 5, 1, 5, 1, 4],
+              [1, 2, 0, 2, 3, 2,11,20, 5, 2, 1, 1, 1, 2],
+              [1, 1, 2, 0, 1, 1, 2, 1, 2, 2, 1, 2, 1, 2],
+              [1, 8, 3, 1, 0, 3, 3, 7, 3, 3, 1, 5, 2, 5],
+              [4, 2, 2, 1, 3, 0, 2, 1, 2, 2, 1, 1, 1, 2],
+              [1, 1,11, 2, 3, 2, 0, 9, 4,20, 1, 8, 1, 4],
+              [1, 5,20, 1, 7, 1, 9, 0,27, 7, 2, 3, 2, 4],
+              [2, 3, 5, 2, 3, 2, 4,27, 0,75, 2, 9, 3, 1],
+              [1, 5, 2, 2, 3, 2,20, 7,75, 0, 1, 1, 2, 1],
+              [1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 0, 2, 1,61],
+              [1, 5, 1, 2, 5, 1, 8, 3, 9, 1, 2, 0, 1,81],
+              [1, 1, 1, 1, 2, 1, 1, 2, 3, 2, 1, 1, 0, 2],
+              [1, 4, 2, 2, 5, 2, 4, 4, 0, 1,61,81, 2, 0]]
+
+print("eignevectors of traffic distribution matrix: ", np.linalg.eig(trafic_dis))
+
+# node_request_probabilities = np.array([0.01801802, 0.04004004, 0.05305305, 0.01901902, 0.04504505,
+#        0.02402402, 0.06706707, 0.08908909, 0.13813814, 0.12212212,
+#        0.07607608, 0.12012012, 0.01901902, 0.16916917])
+#traffic_dist = np.outer(node_request_probabilities, node_request_probabilities)
+#print(f"traffic_dist: {traffic_dist}")
 
 prob = np.array(trafic_dis)/np.sum(trafic_dis)
                       
-LINK_NUM = 44
+LINK_NUM = 22 if bidirectional else 44
 NODE_NUM = 14
 SLOT_TOTAL = 100
 
@@ -98,9 +159,9 @@ M = 1 # first M starting FS allocation positions are considered
 #
 kpath = 5 # = 1 SP-FF, = 5, KSP-FF
 
-lambda_req = 12 # average number of requests per provisioning period, for uniform traffic, = 10, for nonuniform traffic = 16
+lambda_req = 10 #10 # average number of requests per provisioning period, for uniform traffic, = 10, for nonuniform traffic = 16
 # lambda_time = [5+2*x for x in range(6)] # average service time per request; randomly select one value from the list for each episode evaluated
-lambda_time = [14] # 25 for all jlt experiments
+lambda_time = [25]#[15] # 25 for all jlt experiments
 len_lambda_time = len(lambda_time)
 
 # generate source and destination pairs
@@ -267,13 +328,13 @@ def cal_len(path):
 	
 def cal_FS(bandwidth,path_len):
     if path_len <= 625:
-        num_FS = math.ceil(current_bandwidth/(4*12.5))+1 # 1 as guard band FS
+        num_FS = math.ceil(bandwidth/(4*12.5))+1 # 1 as guard band FS
     elif path_len <= 1250:
-        num_FS = math.ceil(current_bandwidth/(3*12.5))+1   
+        num_FS = math.ceil(bandwidth/(3*12.5))+1
     elif path_len <= 2500:
-        num_FS = math.ceil(current_bandwidth/(2*12.5))+1
+        num_FS = math.ceil(bandwidth/(2*12.5))+1
     else:
-        num_FS = math.ceil(current_bandwidth/(1*12.5))+1
+        num_FS = math.ceil(bandwidth/(1*12.5))+1
     return int(num_FS)
     
 if __name__ == "__main__":
@@ -319,6 +380,8 @@ if __name__ == "__main__":
                 current_dst = temp[1]
                 current_bandwidth = np.random.randint(25, 101)
                 current_TTL = 0
+
+                # This detail causes a crucial difference!!!!!!
                 while current_TTL == 0 or current_TTL >= service_time * 2:
                     current_TTL = np.random.exponential(service_time)
 
