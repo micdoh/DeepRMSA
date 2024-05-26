@@ -110,8 +110,8 @@ regu_scalar = 1e-4
 
 max_cpu = 16
 
-lambda_req = 1
-lambda_time = [14]
+lambda_req = 10
+lambda_time = [25]
 SLOT_TOTAL = 100
 
 len_lambda_time = len(lambda_time)
