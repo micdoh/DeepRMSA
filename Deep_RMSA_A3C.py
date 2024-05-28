@@ -200,7 +200,6 @@ with tf.compat.v1.Session() as sess:
         agent_threads.append(t)
     start_time = time()
     coord.join(agent_threads)
-    end_time = time.time()
-    execution_time = end_time - start_time
+    execution_time = time.time() - start_time
     print(f"The code operation took {execution_time} seconds to execute.")
 

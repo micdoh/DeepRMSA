@@ -538,6 +538,10 @@ class DeepRMSA_Agent():
                     fp = open('entropy.dat', 'a')
                     fp.write('%f\n' % float(mean_entropy))
                     fp.close()
+                    # Write current time
+                    fp = open('time.dat', 'a')
+                    fp.write('%f\n' % time())
+                    fp.close()
                 
                 self.episode_blocking.append(bp)
                 self.episode_rewards.append(episode_reward)
