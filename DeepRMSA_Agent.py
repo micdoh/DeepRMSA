@@ -323,6 +323,9 @@ class DeepRMSA_Agent():
         with sess.as_default(), sess.graph.as_default():                 
             while not coord.should_stop():
            
+                if episode_count > 5000:
+                    coord.request_stop()
+
                 episode_values = []
                 episode_reward = 0
                 episode_step_count = 0
