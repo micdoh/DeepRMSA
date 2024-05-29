@@ -179,7 +179,7 @@ with tf.device("/cpu:0"):
     agents = []
     # Create worker classes
     for i in range(num_agents):
-        agents.append(DeepRMSA_Agent(i,trainer,linkmap,LINK_NUM,NODE_NUM,SLOT_TOTAL,k_path,M,lambda_req,lambda_time,len_lambda_time,gamma,episode_size,batch_size,Src_Dest_Pair,Candidate_Paths,num_src_dest_pair,model_path,global_episodes,regu_scalar,x_dim_p,x_dim_v,n_actions,num_layers,layer_size,model2_flag,nonuniform,prob_arr))
+        agents.append(DeepRMSA_Agent(i,trainer,linkmap,LINK_NUM,NODE_NUM,SLOT_TOTAL,k_path,M,lambda_req,lambda_time,len_lambda_time,gamma,episode_size,batch_size,Src_Dest_Pair,Candidate_Paths,num_src_dest_pair,model_path,global_episodes,regu_scalar,x_dim_p,x_dim_v,n_actions,num_layers,layer_size,model2_flag,nonuniform,prob_arr,num_parallel_agents=num_agents))
     saver = tf.compat.v1.train.Saver(max_to_keep = 5)
 
 with tf.compat.v1.Session() as sess:
@@ -200,6 +200,6 @@ with tf.compat.v1.Session() as sess:
         agent_threads.append(t)
     start_time = time()
     coord.join(agent_threads)
-    execution_time = time.time() - start_time
+    execution_time = time() - start_time
     print(f"The code operation took {execution_time} seconds to execute.")
 

@@ -48,7 +48,8 @@ class DeepRMSA_Agent():
                  layer_size,
                  model2_flag,
                  nonuniform,
-                 prob_arr):
+                 prob_arr,
+                 num_parallel_agents=16):
         self.name = 'agent_' + str(id)
         self.trainer = trainer
         self.linkmap = linkmap
@@ -80,6 +81,7 @@ class DeepRMSA_Agent():
         self.x_dim_p = x_dim_p
         self.x_dim_v = x_dim_v
         self.n_actions = n_actions
+        self.num_parallel_agents = num_parallel_agents
 
         self.local_network = AC_Net(scope = self.name,
                                     trainer = self.trainer,
@@ -299,6 +301,7 @@ class DeepRMSA_Agent():
         
     def rmsa(self, sess, coord, saver):  
     
+        current_time = time()
         time_to = 0
         req_id = 0
         
@@ -323,7 +326,7 @@ class DeepRMSA_Agent():
         with sess.as_default(), sess.graph.as_default():                 
             while not coord.should_stop():
            
-                if episode_count > 5000:
+                if episode_count > (5000 / self.num_parallel_agents) + 3:
                     coord.request_stop()
 
                 episode_values = []
@@ -504,7 +507,7 @@ class DeepRMSA_Agent():
                         del(episode_buffer[:self.batch_size])
                         sess.run(self.update_local_ops) # if we want to synchronize local with global every a training is performed
                         epsilon = np.max([epsilon - 1e-5, 0.05])
-                        
+
                 # end of an episode
                 episode_count += 1
                 
@@ -540,8 +543,11 @@ class DeepRMSA_Agent():
                     fp.close()
                     # Write current time
                     fp = open('time.dat', 'a')
-                    fp.write('%f\n' % time())
+                    fp.write('%f\n' % float(time() - current_time))
                     fp.close()
+
+                print(f"Episode count {episode_count}")
+                print(f"Time to complete episode {time() - current_time}")
                 
                 self.episode_blocking.append(bp)
                 self.episode_rewards.append(episode_reward)
