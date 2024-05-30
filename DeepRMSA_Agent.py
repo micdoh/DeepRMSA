@@ -519,37 +519,37 @@ class DeepRMSA_Agent():
                     continue
                 
                 bp = num_blocks/self.episode_size
-                if self.name == 'agent_0':
-                    print('Blocking Probability = ', bp)
-                    #print('Action Distribution', actionss.count(0)/len(actionss))
-                    print('Mean Resource Utilization =', np.mean(resource_util))
-                    # store blocking probability
-                    fp = open(f'BP_{self.current_datetime}.dat', 'a')
-                    fp.write('%f\n' % bp)
-                    fp.close()
-                    # store value prediction
-                    fp = open(f'value_{self.current_datetime}.dat', 'a')
-                    fp.write('%f\n' % np.mean(episode_values))
-                    fp.close()
-                    # store value loss
-                    fp = open(f'value_loss_{self.current_datetime}.dat', 'a')
-                    fp.write('%f\n' % float(mean_value_losss))
-                    fp.close()
-                    # store policy loss
-                    fp = open(f'policy_loss_{self.current_datetime}.dat', 'a')
-                    fp.write('%f\n' % float(mean_policy_loss))
-                    fp.close()
-                    # store entroy
-                    fp = open(f'entropy_{self.current_datetime}.dat', 'a')
-                    fp.write('%f\n' % float(mean_entropy))
-                    fp.close()
-                    # Write current time
-                    fp = open(f'time.dat_{self.current_datetime}', 'a')
-                    fp.write('%f\n' % float(time() - current_time))
-                    # Write ep, BP, time
-                    fp = open(f'ep_BP_time_{self.current_datetime}.csv', 'a')
-                    fp.write('%d,%f,%f\n' % (episode_count, bp, time() - current_time))
-                    fp.close()
+
+                print('Blocking Probability = ', bp)
+                #print('Action Distribution', actionss.count(0)/len(actionss))
+                print('Mean Resource Utilization =', np.mean(resource_util))
+                # store blocking probability
+                fp = open(f'BP_{self.current_datetime}_{self.name}.dat', 'a')
+                fp.write('%f\n' % bp)
+                fp.close()
+                # store value prediction
+                fp = open(f'value_{self.current_datetime}_{self.name}.dat', 'a')
+                fp.write('%f\n' % np.mean(episode_values))
+                fp.close()
+                # store value loss
+                fp = open(f'value_loss_{self.current_datetime}_{self.name}.dat', 'a')
+                fp.write('%f\n' % float(mean_value_losss))
+                fp.close()
+                # store policy loss
+                fp = open(f'policy_loss_{self.current_datetime}_{self.name}.dat', 'a')
+                fp.write('%f\n' % float(mean_policy_loss))
+                fp.close()
+                # store entroy
+                fp = open(f'entropy_{self.current_datetime}_{self.name}.dat', 'a')
+                fp.write('%f\n' % float(mean_entropy))
+                fp.close()
+                # Write current time
+                fp = open(f'time_{self.current_datetime}_{self.name}.dat', 'a')
+                fp.write('%f\n' % float(time() - current_time))
+                # Write ep, BP, time
+                fp = open(f'ep_BP_time_{self.current_datetime}_{self.name}.csv', 'a')
+                fp.write('%d,%f,%f\n' % (episode_count, bp, time() - current_time))
+                fp.close()
 
                 print(f"Episode count {episode_count}")
                 print(f"Time to complete episode {time() - current_time}")
