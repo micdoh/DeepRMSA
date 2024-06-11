@@ -363,9 +363,9 @@ class DeepRMSA_Agent():
                     current_src = temp[0]
                     current_dst = temp[1]
                     current_bandwidth = np.random.randint(25, 101)
-                    current_TTL = 0
-                    while current_TTL == 0 or current_TTL >= self.service_time*2:
-                        current_TTL = np.random.exponential(self.service_time)
+                    current_TTL = np.random.exponential(self.service_time)
+                    # while current_TTL == 0 or current_TTL >= self.service_time*2:
+                    #     current_TTL = np.random.exponential(self.service_time)
                         
                     # generate features
                     '''TTL_norm = current_TTL/(2*self.service_time)'''
@@ -497,7 +497,7 @@ class DeepRMSA_Agent():
                     
                     resource_util.append(1-np.sum(self.slot_map)/(self.LINK_NUM*self.SLOT_TOTAL))
                     
-                    if episode_count < (3000/self.episode_size): # for warm-up
+                    if episode_count < (5000/self.episode_size): # for warm-up
                         continue
                     
                     # store experience
@@ -524,31 +524,31 @@ class DeepRMSA_Agent():
                 #print('Action Distribution', actionss.count(0)/len(actionss))
                 print('Mean Resource Utilization =', np.mean(resource_util))
                 # store blocking probability
-                fp = open(f'BP_{self.current_datetime}_{self.name}.dat', 'a')
-                fp.write('%f\n' % bp)
-                fp.close()
-                # store value prediction
-                fp = open(f'value_{self.current_datetime}_{self.name}.dat', 'a')
-                fp.write('%f\n' % np.mean(episode_values))
-                fp.close()
-                # store value loss
-                fp = open(f'value_loss_{self.current_datetime}_{self.name}.dat', 'a')
-                fp.write('%f\n' % float(mean_value_losss))
-                fp.close()
-                # store policy loss
-                fp = open(f'policy_loss_{self.current_datetime}_{self.name}.dat', 'a')
-                fp.write('%f\n' % float(mean_policy_loss))
-                fp.close()
-                # store entroy
-                fp = open(f'entropy_{self.current_datetime}_{self.name}.dat', 'a')
-                fp.write('%f\n' % float(mean_entropy))
-                fp.close()
-                # Write current time
-                fp = open(f'time_{self.current_datetime}_{self.name}.dat', 'a')
-                fp.write('%f\n' % float(time() - current_time))
+                # fp = open(f'BP_{self.current_datetime}_{self.name}.dat', 'a')
+                # fp.write('%f\n' % bp)
+                # fp.close()
+                # # store value prediction
+                # fp = open(f'value_{self.current_datetime}_{self.name}.dat', 'a')
+                # fp.write('%f\n' % np.mean(episode_values))
+                # fp.close()
+                # # store value loss
+                # fp = open(f'value_loss_{self.current_datetime}_{self.name}.dat', 'a')
+                # fp.write('%f\n' % float(mean_value_losss))
+                # fp.close()
+                # # store policy loss
+                # fp = open(f'policy_loss_{self.current_datetime}_{self.name}.dat', 'a')
+                # fp.write('%f\n' % float(mean_policy_loss))
+                # fp.close()
+                # # store entroy
+                # fp = open(f'entropy_{self.current_datetime}_{self.name}.dat', 'a')
+                # fp.write('%f\n' % float(mean_entropy))
+                # fp.close()
+                # # Write current time
+                # fp = open(f'time_{self.current_datetime}_{self.name}.dat', 'a')
+                # fp.write('%f\n' % float(time() - current_time))
                 # Write ep, BP, time
-                fp = open(f'ep_BP_time_{self.current_datetime}_{self.name}.csv', 'a')
-                fp.write('%d,%f,%f\n' % (episode_count, bp, time() - current_time))
+                fp = open(f'ep_BP_util_time_{self.current_datetime}_{self.name}.csv', 'a')
+                fp.write('%d,%f,%f,%f\n' % (episode_count, bp, np.mean(resource_util), time() - current_time))
                 fp.close()
 
                 print(f"Episode count {episode_count}")
@@ -561,9 +561,9 @@ class DeepRMSA_Agent():
                 # Periodically save model parameters, and summary statistics.
                 sample_step = int(1000/self.episode_size)
                 if episode_count % sample_step == 0 and episode_count != 0:
-                    '''if episode_count % (100*sample_step) == 0 and self.name == 'agent_0':
+                    if episode_count % (100*sample_step) == 0 and self.name == 'agent_0':
                         saver.save(sess, self.model_path+'/model.cptk')
-                        print ("Model Saved")'''
+                        print ("Model Saved")
 
                     '''if self.name == 'agent_0':
                         mean_reward = np.mean(self.episode_rewards[-sample_step:])
